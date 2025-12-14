@@ -3,6 +3,7 @@ import express from "express";
 const app = express();
 app.use(express.json());
 
+// Health check
 app.get("/", (req, res) => {
   res.status(200).json({
     status: "OK",
@@ -10,8 +11,9 @@ app.get("/", (req, res) => {
   });
 });
 
+// 🚨 PORTA CORRETA PARA RAILWAY
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
