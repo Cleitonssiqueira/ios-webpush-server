@@ -1,18 +1,14 @@
-import express from "express";
+import express from 'express';
 
 const app = express();
 
-// middleware básico
-app.use(express.json());
+// Railway fornece a porta automaticamente
+const PORT = process.env.PORT || 3000;
 
-// rota obrigatória
-app.get("/", (req, res) => {
-  res.status(200).send("OK");
+app.get('/', (req, res) => {
+  res.send('🚀 Server is running on Railway!');
 });
 
-// 🚨 PORTA DO RAILWAY (NÃO MEXER)
-const PORT = process.env.PORT;
-
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Servidor escutando na porta:", PORT);
+app.listen(PORT, () => {
+  console.log('Server running on port', PORT);
 });
