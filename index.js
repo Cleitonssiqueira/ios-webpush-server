@@ -1,24 +1,20 @@
 import express from "express";
-import webpush from "web-push";
 
 const app = express();
 
-// 🔴 ESSENCIAL NO RAILWAY
-const PORT = process.env.PORT || 3000;
+// 🚨 OBRIGATÓRIO no Railway
+const PORT = process.env.PORT;
 
-app.use(express.json());
+if (!PORT) {
+  console.error("❌ PORT não definida pelo Railway");
+  process.exit(1);
+}
 
-// health check (Railway precisa disso)
 app.get("/", (req, res) => {
-  res.status(200).send("🚀 iOS Web Push Server Online");
+  res.status(200).send("Servidor online 🚀");
 });
 
-// exemplo de endpoint de push
-app.post("/send", async (req, res) => {
-  res.json({ ok: true, message: "endpoint funcionando" });
-});
-
-// 🔴 OBRIGATÓRIO
+// 🚨 NÃO FIXAR PORTA
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Server rodando na porta ${PORT}`);
+  console.log("✅ Server rodando na porta", PORT);
 });
