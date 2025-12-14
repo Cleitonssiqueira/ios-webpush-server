@@ -1,36 +1,33 @@
-import express from 'express';
-import webpush from 'web-push';
+import express from "express";
+import webpush from "web-push";
 
 const app = express();
 app.use(express.json());
 
+// 🔴 OBRIGATÓRIO NO RAILWAY
 const PORT = process.env.PORT || 3000;
 
-// 🔐 SUAS VAPID (essas já estão corretas)
-webpush.setVapidDetails(
-  'mailto:contato@clinicafisio.site',
-  'BCHNShKsmBE9CVqvIdxfpjurjyw4abMfN8eOZaAhXSWQGOQur-9stycT7UoTjyAJ4EZaHavVDduebthYp8mxHzk',
-  'EBjVt6VC1iwUAjp9XEbn6yED2oJQKUkXfgIQQlQaWMk'
-);
-
-app.get('/', (req, res) => {
-  res.send('🚀 Push server online');
+/* =========================
+   TESTE DE VIDA (ROOT)
+========================= */
+app.get("/", (req, res) => {
+  res.status(200).send("🚀 iOS Web Push Server ONLINE");
 });
 
-app.post('/send', async (req, res) => {
-  const { endpoint, p256dh, auth, title, body } = req.body;
-
+/* =========================
+   EXEMPLO DE PUSH (TESTE)
+========================= */
+app.post("/send", async (req, res) => {
   try {
+    const { subscription, payload } = req.body;
+
+    if (!subscription) {
+      return res.status(400).json({ error: "No subscription" });
+    }
+
     await webpush.sendNotification(
-      {
-        endpoint,
-        keys: { p256dh, auth }
-      },
-      JSON.stringify({
-        title: title || 'Push',
-        body: body || 'Mensagem'
-      }),
-      { TTL: 60 }
+      subscription,
+      JSON.stringify(payload || { title: "Teste", body: "Push OK 🚀" })
     );
 
     res.json({ success: true });
@@ -40,6 +37,9 @@ app.post('/send', async (req, res) => {
   }
 });
 
+/* =========================
+   START SERVER
+========================= */
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
